@@ -8,7 +8,6 @@ import com.rodem.shop.member.MemberResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,7 +23,7 @@ public class MemberService {
         return new ResponseEntity<>(HttpStatus.OK.value(), memberResponseList, memberResponseList.size());
     }
 
-    public ResponseEntity<MemberResponse> create(@RequestBody MemberRequest request) {
+    public ResponseEntity<MemberResponse> create(MemberRequest request) {
         Member member = new Member(
                 UUID.randomUUID(),
                 request.email(),
