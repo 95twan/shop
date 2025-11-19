@@ -21,7 +21,7 @@ public class MemberService {
 
     public ResponseEntity<List<MemberResponse>> findAll() {
         List<MemberResponse> memberResponseList = memberRepository.findAll().stream().map(Member::memberToResponse).toList();
-        return new ResponseEntity<>(HttpStatus.OK.value(), memberResponseList, memberRepository.count());
+        return new ResponseEntity<>(HttpStatus.OK.value(), memberResponseList, memberResponseList.size());
     }
 
     public ResponseEntity<MemberResponse> create(@RequestBody MemberRequest request) {
