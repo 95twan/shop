@@ -8,7 +8,6 @@ import com.rodem.shop.member.MemberResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
@@ -21,7 +20,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     public ResponseEntity<List<MemberResponse>> findAll() {
-        List<MemberResponse> memberResponseList = memberRepository.findAll().stream().map(MemberResponse::memberToResponse).toList();
+        List<MemberResponse> memberResponseList = memberRepository.findAll().stream().map(Member::memberToResponse).toList();
         return new ResponseEntity<>(HttpStatus.OK.value(), memberResponseList, memberRepository.count());
     }
 
@@ -37,7 +36,7 @@ public class MemberService {
         );
 
         Member savedMember = memberRepository.save(member);
-        MemberResponse memberResponse = MemberResponse.memberToResponse(savedMember);
+        MemberResponse memberResponse = savedMember.memberToResponse();
         return new ResponseEntity<>(HttpStatus.CREATED.value(), memberResponse, 1);
     }
 
@@ -45,7 +44,7 @@ public class MemberService {
         Member member = memberRepository.findById(UUID.fromString(id)).orElseThrow();
         member.updateMember(request);
         Member updatedMember = memberRepository.save(member);
-        MemberResponse memberResponse = MemberResponse.memberToResponse(updatedMember);
+        MemberResponse memberResponse = updatedMember.memberToResponse();
         return new ResponseEntity<>(HttpStatus.CREATED.value(), memberResponse, 1);
     }
 

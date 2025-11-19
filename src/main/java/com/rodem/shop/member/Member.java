@@ -115,4 +115,8 @@ public class Member {
         this.saltKey = request.saltKey();
         this.flag = request.flag();
     }
+
+    public MemberResponse memberToResponse() {
+        return new MemberResponse(email, name, phone, flag);
+    }
 }
