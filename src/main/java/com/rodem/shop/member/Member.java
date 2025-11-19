@@ -1,46 +1,59 @@
 package com.rodem.shop.member;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Schema(description = "유저 정보")
 @Data
 @Entity
 @Table(name = "\"member\"", schema = "public")
 public class Member {
 
+    @Schema(description = "유저의 UUID")
     @Id
     private UUID id;
 
+    @Schema(description = "유저의 email")
     @Column(nullable = false, length = 50, unique = true)
     private String email;
 
+    @Schema(description = "유저")
     @Column(name = "\"name\"", length = 20)
     private String name;
 
+    @Schema(description = "비밀번호")
     @Column(name = "\"password\"", nullable = false, length = 100)
     private String password;
 
+    @Schema(description = "유저의 핸드폰 번호")
     @Column(nullable = false, length = 20, unique = true)
     private String phone;
 
+    @Schema(description = "등록한 유저의 UUID")
     @Column(name = "reg_id", nullable = false)
     private UUID regId;
 
+    @Schema(description = "등록 날짜")
     @Column(name = "reg_dt", nullable = false)
     private LocalDateTime regDt;
 
+    @Schema(description = "수정한 유저의 UUID")
     @Column(name = "modify_id", nullable = false)
     private UUID modifyId;
 
+    @Schema(description = "수정한 날짜")
     @Column(name = "modify_dt", nullable = false)
     private LocalDateTime modifyDt;
 
+    @Schema(description = "saltkey")
     @Column(name = "saltkey", nullable = false, length = 14)
     private String saltKey;
 
+    @Schema(description = "유저의 상태")
     @Column(name = "flag", length = 5)
     private String flag;
 
@@ -92,5 +105,14 @@ public class Member {
         if (modifyId == null) {
             modifyId = id;
         }
+    }
+
+    public void updateMember(MemberRequest request) {
+        this.email = request.email();
+        this.name = request.name();
+        this.password = request.password();
+        this.phone = request.phone();
+        this.saltKey = request.saltKey();
+        this.flag = request.flag();
     }
 }
