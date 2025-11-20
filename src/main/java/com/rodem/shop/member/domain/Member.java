@@ -1,4 +1,4 @@
-package com.rodem.shop.member;
+package com.rodem.shop.member.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -58,9 +58,10 @@ public class Member {
     private String flag;
 
 
-    public Member() { }
+    public Member() {
+    }
 
-    public Member(UUID id, String email, String name, String password, String phone, String saltKey, String flag) {
+    private Member(UUID id, String email, String name, String password, String phone, String saltKey, String flag) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -70,8 +71,20 @@ public class Member {
         this.flag = flag;
     }
 
-    public Member(String id, String email, String name, String password, String phone, String saltKey, String flag) {
-        this.id = UUID.fromString(id);
+
+    public static Member create(String email, String name, String password, String phone, String saltKey, String flag) {
+        return new Member(
+                UUID.randomUUID(),
+                email,
+                name,
+                password,
+                phone,
+                saltKey,
+                flag
+        );
+    }
+
+    public void updateInformation(String email, String name, String password, String phone, String saltKey, String flag) {
         this.email = email;
         this.name = name;
         this.password = password;
@@ -105,18 +118,5 @@ public class Member {
         if (modifyId == null) {
             modifyId = id;
         }
-    }
-
-    public void updateMember(MemberRequest request) {
-        this.email = request.email();
-        this.name = request.name();
-        this.password = request.password();
-        this.phone = request.phone();
-        this.saltKey = request.saltKey();
-        this.flag = request.flag();
-    }
-
-    public MemberResponse memberToResponse() {
-        return new MemberResponse(email, name, phone, flag);
     }
 }

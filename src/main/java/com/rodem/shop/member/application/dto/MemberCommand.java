@@ -1,6 +1,6 @@
-package com.rodem.shop.member;
+package com.rodem.shop.member.application.dto;
 
-public record MemberRequest(
+public record MemberCommand(
         String email,
         String name,
         String password,

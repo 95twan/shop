@@ -1,0 +1,38 @@
+package com.rodem.shop.member.infrastructure;
+
+import com.rodem.shop.member.domain.Member;
+import com.rodem.shop.member.domain.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+import java.util.UUID;
+
+@Repository
+@RequiredArgsConstructor
+public class MemberRepositoryAdapter implements MemberRepository {
+
+    private final MemberJpaRepository memberJpaRepository;
+
+    @Override
+    public Page<Member> findAll(Pageable pageable) {
+        return memberJpaRepository.findAll(pageable);
+    }
+
+    @Override
+    public Optional<Member> findById(UUID id) {
+        return memberJpaRepository.findById(id);
+    }
+
+    @Override
+    public Member save(Member member) {
+        return memberJpaRepository.save(member);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        memberJpaRepository.deleteById(id);
+    }
+}
