@@ -5,6 +5,7 @@ import com.rodem.shop.product.application.dto.ProductCommand;
 import com.rodem.shop.product.application.dto.ProductInfo;
 import com.rodem.shop.product.domain.Product;
 import com.rodem.shop.product.domain.ProductRepository;
+import com.rodem.shop.seller.domain.SellerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import java.util.UUID;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final SellerRepository sellerRepository;
 
     public ResponseEntity<List<ProductInfo>> findAll(Pageable pageable) {
         Page<Product> page = productRepository.findAll(pageable);
@@ -27,6 +29,11 @@ public class ProductService {
     }
 
     public ResponseEntity<ProductInfo> create(ProductCommand command) {
+        if (command.sellerId() == null) {
+            throw new IllegalArgumentException("sellerId is required");
+        }
+        sellerRepository.findById(command.sellerId())
+                .orElseThrow(() -> new IllegalArgumentException("Seller not found: " + command.sellerId()));
         UUID operator = command.operatorId() != null ? command.operatorId() : UUID.randomUUID();
         Product product = Product.create(
                 command.sellerId(),

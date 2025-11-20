@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+.env
+toss-payment-test.html
+.DS_Store
