@@ -7,13 +7,12 @@ import com.rodem.shop.member.application.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("${api.v1}/member")
+@RequestMapping("${api.v1}/members")
 @RequiredArgsConstructor
 public class MemberController {
 
