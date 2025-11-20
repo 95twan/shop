@@ -17,6 +17,9 @@ public class Product {
     @Id
     private UUID id;
 
+    @Column(name = "seller_id", nullable = false)
+    private UUID sellerId;
+
     @Column(nullable = false, length = 100)
     private String name;
 
@@ -44,13 +47,17 @@ public class Product {
     @Column(name = "modify_dt", nullable = false)
     private LocalDateTime modifyDt;
 
-    private Product(UUID id,
-                    String name,
-                    String description,
-                    BigDecimal price,
-                    Integer stock,
-                    String status) {
+    private Product(
+            UUID id,
+            UUID sellerId,
+            String name,
+            String description,
+            BigDecimal price,
+            Integer stock,
+            String status
+    ) {
         this.id = id;
+        this.sellerId = sellerId;
         this.name = name;
         this.description = description;
         this.price = price;
@@ -58,24 +65,29 @@ public class Product {
         this.status = status;
     }
 
-    public static Product create(String name,
-                                 String description,
-                                 BigDecimal price,
-                                 Integer stock,
-                                 String status,
-                                 UUID creatorId) {
-        Product product = new Product(UUID.randomUUID(), name, description, price, stock, status);
+    public static Product create(
+            UUID sellerId,
+            String name,
+            String description,
+            BigDecimal price,
+            Integer stock,
+            String status,
+            UUID creatorId
+    ) {
+        Product product = new Product(UUID.randomUUID(), sellerId, name, description, price, stock, status);
         product.regId = creatorId;
         product.modifyId = creatorId;
         return product;
     }
 
-    public void update(String name,
-                       String description,
-                       BigDecimal price,
-                       Integer stock,
-                       String status,
-                       UUID modifierId) {
+    public void update(
+            String name,
+            String description,
+            BigDecimal price,
+            Integer stock,
+            String status,
+            UUID modifierId
+    ) {
         this.name = name;
         this.description = description;
         this.price = price;
