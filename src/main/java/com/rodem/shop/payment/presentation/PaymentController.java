@@ -2,7 +2,9 @@ package com.rodem.shop.payment.presentation;
 
 import com.rodem.shop.common.ResponseEntity;
 import com.rodem.shop.payment.application.PaymentService;
+import com.rodem.shop.payment.application.dto.PaymentFailureInfo;
 import com.rodem.shop.payment.application.dto.PaymentInfo;
+import com.rodem.shop.payment.presentation.dto.PaymentFailRequest;
 import com.rodem.shop.payment.presentation.dto.PaymentRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -27,5 +29,11 @@ public class PaymentController {
     @PostMapping("/confirm")
     public ResponseEntity<PaymentInfo> confirm(@RequestBody PaymentRequest request) {
         return paymentService.confirm(request.toCommand());
+    }
+
+    @Operation(summary = "결제 실패 기록", description = "토스 결제 실패 정보를 저장한다.")
+    @PostMapping("/fail")
+    public ResponseEntity<PaymentFailureInfo> fail(@RequestBody PaymentFailRequest request) {
+        return paymentService.recordFailure(request.toCommand());
     }
 }

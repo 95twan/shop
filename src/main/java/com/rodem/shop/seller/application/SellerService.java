@@ -1,6 +1,7 @@
 package com.rodem.shop.seller.application;
 
 import com.rodem.shop.common.ResponseEntity;
+import com.rodem.shop.seller.aop.SellerNotFoundException;
 import com.rodem.shop.seller.application.dto.SellerCommand;
 import com.rodem.shop.seller.application.dto.SellerInfo;
 import com.rodem.shop.seller.domain.Seller;
@@ -41,7 +42,7 @@ public class SellerService {
     }
 
     public ResponseEntity<SellerInfo> update(UUID id, SellerCommand command) {
-        Seller seller = sellerRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Seller not found: " + id));
+        Seller seller = sellerRepository.findById(id).orElseThrow(() -> new SellerNotFoundException(id));
         seller.update(
                 command.companyName(),
                 command.representativeName(),

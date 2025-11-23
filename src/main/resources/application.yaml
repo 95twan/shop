@@ -17,6 +17,13 @@ spring:
         format_sql: true
         jdbc:
           time_zone: Asia/Seoul
+  batch:
+    jdbc:
+      initialize-schema: never
+  task:
+    scheduling:
+      cron:
+        settlement: 0 0 0 * * *
 
 api:
   v1: /api/v1
@@ -24,3 +31,8 @@ api:
 payment:
   toss:
     secret-key: ${TOSS_SECRET_KEY}
+
+settlement:
+  async:
+    pool-size: 5
+    enabled: false

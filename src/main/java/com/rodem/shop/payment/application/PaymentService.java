@@ -2,10 +2,14 @@ package com.rodem.shop.payment.application;
 
 import com.rodem.shop.common.ResponseEntity;
 import com.rodem.shop.payment.application.dto.PaymentCommand;
+import com.rodem.shop.payment.application.dto.PaymentFailCommand;
+import com.rodem.shop.payment.application.dto.PaymentFailureInfo;
 import com.rodem.shop.payment.application.dto.PaymentInfo;
 import com.rodem.shop.payment.client.TossPaymentClient;
 import com.rodem.shop.payment.client.dto.TossPaymentResponse;
 import com.rodem.shop.payment.domain.Payment;
+import com.rodem.shop.payment.domain.PaymentFailure;
+import com.rodem.shop.payment.domain.PaymentFailureRepository;
 import com.rodem.shop.payment.domain.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,6 +25,7 @@ import java.util.List;
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
+    private final PaymentFailureRepository paymentFailureRepository;
     private final TossPaymentClient tossPaymentClient;
 
     public ResponseEntity<List<PaymentInfo>> findAll(Pageable pageable) {
@@ -45,4 +50,16 @@ public class PaymentService {
         return new ResponseEntity<>(HttpStatus.CREATED.value(), PaymentInfo.from(saved), 1);
     }
 
+    public ResponseEntity<PaymentFailureInfo> recordFailure(PaymentFailCommand command) {
+        PaymentFailure failure = PaymentFailure.from(
+                command.orderId(),
+                command.paymentKey(),
+                command.errorCode(),
+                command.errorMessage(),
+                command.amount(),
+                command.rawPayload()
+        );
+        PaymentFailure saved = paymentFailureRepository.save(failure);
+        return new ResponseEntity<>(HttpStatus.CREATED.value(), PaymentFailureInfo.from(saved), 1);
+    }
 }
