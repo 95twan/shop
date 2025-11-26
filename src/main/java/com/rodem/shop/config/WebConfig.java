@@ -2,9 +2,9 @@ package com.rodem.shop.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -13,16 +13,21 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig {
+
+    @Value("${api.v1}")
+    String api;
+
     @Bean
     public WebMvcConfigurer corsConfig() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/**")
+                registry.addMapping(api + "/**")
                         .allowedOriginPatterns("*")
-                        .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-                        .allowedHeaders("*")
-                        .allowCredentials(true);
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .exposedHeaders("Custom-Header")
+                        .allowCredentials(true).maxAge(3600);
+                WebMvcConfigurer.super.addCorsMappings(registry);
             }
 
             @Override

@@ -1,6 +1,8 @@
 package com.rodem.shop.payment.application;
 
 import com.rodem.shop.common.ResponseEntity;
+import com.rodem.shop.order.application.OrderService;
+import com.rodem.shop.order.domain.PurchaseOrder;
 import com.rodem.shop.payment.application.dto.PaymentCommand;
 import com.rodem.shop.payment.application.dto.PaymentFailCommand;
 import com.rodem.shop.payment.application.dto.PaymentFailureInfo;
@@ -11,6 +13,8 @@ import com.rodem.shop.payment.domain.Payment;
 import com.rodem.shop.payment.domain.PaymentFailure;
 import com.rodem.shop.payment.domain.PaymentFailureRepository;
 import com.rodem.shop.payment.domain.PaymentRepository;
+import com.rodem.shop.settlement.domain.SellerSettlement;
+import com.rodem.shop.settlement.domain.SellerSettlementRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +30,9 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final PaymentFailureRepository paymentFailureRepository;
+    private final SellerSettlementRepository sellerSettlementRepository;
     private final TossPaymentClient tossPaymentClient;
+    private final OrderService orderService;
 
     public ResponseEntity<List<PaymentInfo>> findAll(Pageable pageable) {
         Page<Payment> page = paymentRepository.findAll(pageable);
@@ -35,6 +41,7 @@ public class PaymentService {
     }
 
     public ResponseEntity<PaymentInfo> confirm(PaymentCommand command) {
+        PurchaseOrder order = orderService.findById(command.orderId());
         TossPaymentResponse tossPayment = tossPaymentClient.confirm(command);
         Payment payment = Payment.create(
                 tossPayment.paymentKey(),
@@ -46,6 +53,10 @@ public class PaymentService {
         payment.markConfirmed(tossPayment.method(), approvedAt, requestedAt);
 
         Payment saved = paymentRepository.save(payment);
+
+        orderService.markPaid(order);
+        SellerSettlement settlement = SellerSettlement.create(order.getSellerId(), order.getId(), order.getAmount());
+        sellerSettlementRepository.save(settlement);
 
         return new ResponseEntity<>(HttpStatus.CREATED.value(), PaymentInfo.from(saved), 1);
     }
