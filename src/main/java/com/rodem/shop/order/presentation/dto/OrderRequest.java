@@ -3,7 +3,6 @@ package com.rodem.shop.order.presentation.dto;
 
 import com.rodem.shop.order.application.dto.OrderCommand;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 public record OrderRequest(

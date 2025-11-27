@@ -2,9 +2,7 @@ package com.rodem.shop.payment.client;
 
 import com.rodem.shop.payment.application.dto.PaymentCommand;
 import com.rodem.shop.payment.client.dto.TossPaymentResponse;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -24,12 +22,11 @@ public class TossPaymentClient {
     private static final String CONFIRM_URL = "https://api.tosspayments.com/v1/payments/confirm";
 
     private final RestTemplate restTemplate;
+    private final TossPaymentProperties properties;
 
-    @Value("${payment.toss.secret-key}")
-    private String secretKey;
 
     public TossPaymentResponse confirm(PaymentCommand command) {
-        if (secretKey == null) {
+        if (properties.getSecretKey() == null || properties.getSecretKey().isBlank()) {
             throw new IllegalArgumentException("Toss secret key is not configured");
         }
         HttpHeaders headers = createHeaders();
@@ -54,7 +51,7 @@ public class TossPaymentClient {
     private HttpHeaders createHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        String auth = secretKey + ":";
+        String auth = properties.getSecretKey() + ":";
         String encoded = Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
         headers.set(HttpHeaders.AUTHORIZATION, "Basic " + encoded);
         return headers;

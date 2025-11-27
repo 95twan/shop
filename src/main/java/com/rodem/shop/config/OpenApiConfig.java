@@ -25,7 +25,7 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI openAPI() {
         Server server = new Server();
-        server.url(String.format("%s/%s", "http://localhost:8000", appName));
+        server.url(String.format("%s/%s", gatewayHost, appName));
         List<Server> servers = List.of(server);
 
         SecurityScheme bearerScheme = new SecurityScheme()
@@ -36,7 +36,7 @@ public class OpenApiConfig {
                 .in(SecurityScheme.In.HEADER);
 
         return new OpenAPI()
-                .info(new Info().title("Member Service API").version("v1"))
+                .info(new Info().title("Shop Service API").version("v1"))
                 .servers(servers)
                 .components(new Components().addSecuritySchemes(SECURITY_SCHEME_NAME, bearerScheme))
                 .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME));

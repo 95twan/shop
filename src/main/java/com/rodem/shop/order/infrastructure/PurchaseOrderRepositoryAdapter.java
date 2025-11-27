@@ -1,6 +1,6 @@
 package com.rodem.shop.order.infrastructure;
 
-import com.rodem.shop.order.domain.OrderRepository;
+import com.rodem.shop.order.domain.PurchaseOrderRepository;
 import com.rodem.shop.order.domain.PurchaseOrder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,22 +12,22 @@ import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
-public class OrderRepositoryAdapter implements OrderRepository {
+public class PurchaseOrderRepositoryAdapter implements PurchaseOrderRepository {
 
-    private final OrderJpaRepository orderJpaRepository;
+    private final PurchaseOrderJpaRepository purchaseOrderJpaRepository;
 
     @Override
     public Page<PurchaseOrder> findAll(Pageable pageable) {
-        return orderJpaRepository.findAll(pageable);
+        return purchaseOrderJpaRepository.findAll(pageable);
     }
 
     @Override
     public Optional<PurchaseOrder> findById(UUID id) {
-        return orderJpaRepository.findById(id);
+        return purchaseOrderJpaRepository.findById(id);
     }
 
     @Override
     public PurchaseOrder save(PurchaseOrder order) {
-        return orderJpaRepository.save(order);
+        return purchaseOrderJpaRepository.save(order);
     }
 }

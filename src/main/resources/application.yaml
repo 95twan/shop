@@ -6,8 +6,15 @@ spring:
     name: shop-service
   config:
     import: optional:configserver:http://localhost:8888
+  elasticsearch:
+    uris: http://localhost:9200
+    connection-timeout: 1s
+    socket-timeout: 3s
 
 management:
+  health:
+    elasticsearch:
+      enabled: false
   endpoints:
     web:
       exposure:
